@@ -1,6 +1,5 @@
 package uk.yermak.imdedup;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.AndFileFilter;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
@@ -22,7 +21,7 @@ import java.util.*;
  */
 public class Dedupler implements Runnable {
 
-    public static final FilenameFilter IMAGE_FILE_FILTER = new AndFileFilter(FileFileFilter.FILE, new SuffixFileFilter(new String[]{"jpg", "jpeg"}, IOCase.INSENSITIVE));
+    private static final FilenameFilter IMAGE_FILE_FILTER = new AndFileFilter(FileFileFilter.FILE, new SuffixFileFilter(new String[]{"jpg", "jpeg"}, IOCase.INSENSITIVE));
     private DedupObserver observer;
     private DedupConfiguration[] configurations;
     private LinkedList<FileEntry> targets = new LinkedList<>();

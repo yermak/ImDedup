@@ -6,8 +6,8 @@ import java.util.prefs.Preferences;
  * Created by yermak on 13-Oct-16.
  */
 public class DedupSettings {
-    DedupConfiguration configuration1 = new DedupConfiguration();
-    DedupConfiguration configuration2 = new DedupConfiguration();
+    private DedupConfiguration configuration1 = new DedupConfiguration();
+    private DedupConfiguration configuration2 = new DedupConfiguration();
 
     private final Preferences preferences;
 

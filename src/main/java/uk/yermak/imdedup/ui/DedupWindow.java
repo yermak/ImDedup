@@ -50,12 +50,8 @@ public class DedupWindow {
         });
 
 
-        browseButton1.addActionListener(e -> {
-            selectFolder(browseButton1, location1Field);
-        });
-        browseButton2.addActionListener(e -> {
-            selectFolder(browseButton2, location2Field);
-        });
+        browseButton1.addActionListener(e -> selectFolder(browseButton1, location1Field));
+        browseButton2.addActionListener(e -> selectFolder(browseButton2, location2Field));
     }
 
     private void selectFolder(JButton browseButton, JTextField locationField) {
@@ -101,7 +97,6 @@ public class DedupWindow {
         if (location1Subfolders.isSelected() != data.isSubfolders1()) return true;
         if (location2Field.getText() != null ? !location2Field.getText().equals(data.getLocation2()) : data.getLocation2() != null)
             return true;
-        if (location2Subfolders.isSelected() != data.isSubfolders2()) return true;
-        return false;
+        return location2Subfolders.isSelected() != data.isSubfolders2();
     }
 }

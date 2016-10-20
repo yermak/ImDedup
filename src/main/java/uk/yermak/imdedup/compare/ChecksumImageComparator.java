@@ -11,10 +11,7 @@ public class ChecksumImageComparator implements ImageComparator {
     @Override
     public boolean compare(FileEntry source, FileEntry target) throws IOException {
 
-        if (source.getLength() == target.getLength() && source.getCrc32() == target.getCrc32()) {
-            return true;
-        }
-        return false;
+        return source.getLength() == target.getLength() && source.getCrc32() == target.getCrc32();
 
     }
 }

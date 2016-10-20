@@ -11,7 +11,6 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.ImageInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.zip.CRC32;
@@ -24,7 +23,7 @@ public class FileEntry {
     private File file;
     private String location;
     private long crc32 = 0;
-    LinkedHashSet<FileEntry> duplicates = new LinkedHashSet<>();
+    private LinkedHashSet<FileEntry> duplicates = new LinkedHashSet<>();
     //    private static ExecutorService pool = Executors.newFixedThreadPool(1);
 //    private CountDownLatch latch;
 
@@ -134,7 +133,7 @@ public class FileEntry {
     }
 
 
-    void displayMetadata(Node root) {
+    private void displayMetadata(Node root) {
         displayMetadata(root, 0);
     }
 
