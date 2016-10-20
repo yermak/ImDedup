@@ -1,9 +1,11 @@
 package uk.yermak.imdedup.ui;
 
 import uk.yermak.imdedup.DedupObserver;
+import uk.yermak.imdedup.DedupSettings;
 import uk.yermak.imdedup.Dedupler;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,22 +27,25 @@ public class DedupWindow {
     private JProgressBar progress;
     private JTabbedPane settingsTab;
     private JLabel statusLabel;
+    private JLabel timerLabel;
     private DedupObserver observer;
 
 
     public DedupWindow() {
-        observer = new DedupObserver(statusLabel, progress, this.dedupButton);
+        DedupSettings data = new DedupSettings();
+        setData(data);
+
+        observer = new DedupObserver(statusLabel, progress, this.dedupButton, this.timerLabel);
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         dedupButton.addActionListener(e -> {
-            if (!observer.isStarted()) {
-                DedupSettings data = new DedupSettings();
+            if (observer.isStarted()) {
+                observer.stop();
+            } else {
                 getData(data);
                 Dedupler dedupler = new Dedupler(observer, data.getConfiguration1(), data.getConfiguration2());
                 executorService.submit(dedupler);
                 observer.started();
-            } else {
-                observer.stopped();
             }
         });
 
@@ -55,6 +60,9 @@ public class DedupWindow {
 
     private void selectFolder(JButton browseButton, JTextField locationField) {
         JFileChooser fileChooser = new JFileChooser();
+        if (locationField.getText() != null) {
+            fileChooser.setCurrentDirectory(new File(locationField.getText()));
+        }
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (JFileChooser.APPROVE_OPTION == fileChooser.showDialog(browseButton.getParent(), null)) {
             try {

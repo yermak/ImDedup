@@ -17,7 +17,7 @@ public class FileEntry {
     private File file;
     private String location;
     private long crc32 = 0;
-    private LinkedHashSet<FileEntry> duplicates = new LinkedHashSet<>();
+    LinkedHashSet<FileEntry> duplicates = new LinkedHashSet<>();
     //    private static ExecutorService pool = Executors.newFixedThreadPool(1);
 //    private CountDownLatch latch;
 
@@ -30,8 +30,8 @@ public class FileEntry {
 
     public void addDuplicate(FileEntry entry) {
         if (this == entry || duplicates.contains(entry)) return;
-        duplicates.add(entry);
-        entry.addDuplicate(this);
+        entry.duplicates.addAll(duplicates);
+        duplicates = entry.duplicates;
     }
 
     @Override
@@ -40,20 +40,9 @@ public class FileEntry {
         if (o == null || getClass() != o.getClass()) return false;
 
         FileEntry fileEntry = (FileEntry) o;
-        try {
-            if (file.length() != fileEntry.file.length()) {
-                return false;
-            }
-            if (getCrc32() != fileEntry.getCrc32()) {
-                return false;
-            }
-            byte[] ownBytes = FileUtils.readFileToByteArray(file);
-            byte[] otherBytes = FileUtils.readFileToByteArray(fileEntry.file);
-            return Arrays.equals(ownBytes, otherBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+
+        return file.equals(fileEntry.file);
+
     }
 
     @Override
@@ -92,5 +81,17 @@ public class FileEntry {
             }
 //            latch.countDown();
         }
+    }
+
+    public long getLength() {
+        return file.length();
+    }
+
+    public byte[] getBytes() throws IOException {
+        return FileUtils.readFileToByteArray(file);
+    }
+
+    public String getFileName() {
+        return file.getName();
     }
 }
