@@ -48,7 +48,7 @@ public class Dedupler implements Runnable {
             observer.finished();
             observer.setStatus("Found duplicates: " + i + " out of " + j + " files in " + observer.getTime() + " sec");
         } catch (StopException se) {
-            return;
+            observer.stopped();
         }
 
     }

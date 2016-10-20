@@ -13,14 +13,18 @@ public class DedupObserver {
     private JButton dedupButton;
     private long start;
     private AtomicBoolean started = new AtomicBoolean(false);
-    private boolean stopped;
     private long finish;
+    private Timer watchdog;
 
-
-    public DedupObserver(JLabel statusLabel, JProgressBar progress, JButton dedupButton) {
+    public DedupObserver(JLabel statusLabel, JProgressBar progress, JButton dedupButton, JLabel timerLabel) {
         this.statusLabel = statusLabel;
         this.progress = progress;
         this.dedupButton = dedupButton;
+        this.watchdog = new Timer(1000, e -> {
+            timerLabel.setText((System.currentTimeMillis() - start)/1000+" sec");
+        });
+        watchdog.setInitialDelay(3000);
+
     }
 
     public void setStatus(String text) {
@@ -45,14 +49,16 @@ public class DedupObserver {
         start = System.currentTimeMillis();
         started.set(true);
         dedupButton.setText("Stop");
+        watchdog.start();
     }
 
     public boolean isStarted() {
         return started.get();
     }
 
-    public void stopped() {
+    public void stop() {
         started.set(false);
+        watchdog.stop();
     }
 
     public void checkStopped() throws StopException {
@@ -67,5 +73,11 @@ public class DedupObserver {
 
     public long getTime() {
         return (finish - start) / 1000;
+    }
+
+    public void stopped() {
+        dedupButton.setText("Dedup");
+        setStatus("Cancelled");
+        setProgress(0);
     }
 }
