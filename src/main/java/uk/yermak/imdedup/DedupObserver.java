@@ -15,6 +15,8 @@ public class DedupObserver {
     private AtomicBoolean started = new AtomicBoolean(false);
     private long finish;
     private Timer watchdog;
+    private JLabel timerLabel;
+    private int fileCounter;
 
     public DedupObserver(JLabel statusLabel, JProgressBar progress, JButton dedupButton, JLabel timerLabel) {
         this.statusLabel = statusLabel;
@@ -23,7 +25,8 @@ public class DedupObserver {
         this.watchdog = new Timer(1000, e -> {
             timerLabel.setText((System.currentTimeMillis() - start)/1000+" sec");
         });
-        watchdog.setInitialDelay(3000);
+        this.timerLabel = timerLabel;
+        watchdog.setInitialDelay(2000);
 
     }
 
@@ -59,6 +62,7 @@ public class DedupObserver {
     public void stop() {
         started.set(false);
         watchdog.stop();
+        timerLabel.setText("0 sec");
     }
 
     public void checkStopped() throws StopException {
@@ -68,6 +72,10 @@ public class DedupObserver {
 
     public void finished() {
         finish = System.currentTimeMillis();
+        watchdog.stop();
+        dedupButton.setText("Dedup");
+        timerLabel.setText("0 sec");
+        started.set(false);
     }
 
 
@@ -79,5 +87,19 @@ public class DedupObserver {
         dedupButton.setText("Dedup");
         setStatus("Cancelled");
         setProgress(0);
+    }
+
+    public void setFoundMoreFiles(int increment) {
+        fileCounter+=increment;
+        setStatus("Found "+ fileCounter + " files");
+    }
+
+    public void lookingForScope() {
+        progress.setIndeterminate(true);
+    }
+
+    public void scopeFound(int total) {
+        progress.setIndeterminate(false);
+        setMaxProgress(total);
     }
 }
