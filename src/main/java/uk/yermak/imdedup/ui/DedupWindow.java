@@ -1,8 +1,11 @@
 package uk.yermak.imdedup.ui;
 
+import uk.yermak.imdedup.ComparisionParams;
 import uk.yermak.imdedup.DedupObserver;
 import uk.yermak.imdedup.DedupSettings;
 import uk.yermak.imdedup.Dedupler;
+import uk.yermak.imdedup.compare.ComparatorFactory;
+import uk.yermak.imdedup.compare.ImageComparator;
 
 import javax.swing.*;
 import java.io.File;
@@ -28,6 +31,9 @@ public class DedupWindow {
     private JTabbedPane settingsTab;
     private JLabel statusLabel;
     private JLabel timerLabel;
+    private JCheckBox sumCheck;
+    private JCheckBox fileCheck;
+    private JCheckBox imageCheck;
     private DedupObserver observer;
 
 
@@ -43,7 +49,9 @@ public class DedupWindow {
                 observer.stop();
             } else {
                 getData(data);
-                Dedupler dedupler = new Dedupler(observer, data.getConfiguration1(), data.getConfiguration2());
+                ComparisionParams param = data.getComparisonParam();
+                ImageComparator imageComparator = ComparatorFactory.comparator(param);
+                Dedupler dedupler = new Dedupler(observer, imageComparator, data.getConfiguration1(), data.getConfiguration2());
                 executorService.submit(dedupler);
                 observer.started();
             }
@@ -82,6 +90,9 @@ public class DedupWindow {
         location1Subfolders.setSelected(data.isSubfolders1());
         location2Field.setText(data.getLocation2());
         location2Subfolders.setSelected(data.isSubfolders2());
+        imageCheck.setSelected(data.isSmartCheck());
+        sumCheck.setSelected(data.isChecksumCheck());
+        fileCheck.setSelected(data.isDataCheck());
     }
 
     public void getData(DedupSettings data) {
@@ -89,6 +100,9 @@ public class DedupWindow {
         data.setSubfolders1(location1Subfolders.isSelected());
         data.setLocation2(location2Field.getText());
         data.setSubfolders2(location2Subfolders.isSelected());
+        data.setSmartCheck(imageCheck.isSelected());
+        data.setChecksumCheck(sumCheck.isSelected());
+        data.setDataCheck(fileCheck.isSelected());
     }
 
     public boolean isModified(DedupSettings data) {
@@ -97,6 +111,10 @@ public class DedupWindow {
         if (location1Subfolders.isSelected() != data.isSubfolders1()) return true;
         if (location2Field.getText() != null ? !location2Field.getText().equals(data.getLocation2()) : data.getLocation2() != null)
             return true;
-        return location2Subfolders.isSelected() != data.isSubfolders2();
+        if (location2Subfolders.isSelected() != data.isSubfolders2()) return true;
+        if (imageCheck.isSelected() != data.isSmartCheck()) return true;
+        if (sumCheck.isSelected() != data.isChecksumCheck()) return true;
+        if (fileCheck.isSelected() != data.isDataCheck()) return true;
+        return false;
     }
 }

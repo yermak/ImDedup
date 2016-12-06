@@ -8,8 +8,10 @@ import java.util.prefs.Preferences;
 public class DedupSettings {
     private DedupConfiguration configuration1 = new DedupConfiguration();
     private DedupConfiguration configuration2 = new DedupConfiguration();
+    private ComparisionParams comparisonParam = new ComparisionParams();
 
     private final Preferences preferences;
+
 
     public DedupSettings() {
         preferences = Preferences.userNodeForPackage(DedupSettings.class);
@@ -76,5 +78,41 @@ public class DedupSettings {
         configuration2.setSubfolders(subfolders2);
         preferences.putBoolean("settings.location2.subfolders", subfolders2);
 
+    }
+
+    public boolean isSmartCheck() {
+        return comparisonParam.isSmartCheck();
+    }
+
+    public void setSmartCheck(boolean smartCheck) {
+        comparisonParam.setSmartCheck(smartCheck);
+    }
+
+    public boolean isBasicCheck() {
+        return comparisonParam.isBasicCheck();
+    }
+
+    public void setBasicCheck(boolean basicCheck) {
+        comparisonParam.setBasicCheck(basicCheck);
+    }
+
+    public boolean isChecksumCheck() {
+        return comparisonParam.isChecksumCheck();
+    }
+
+    public void setChecksumCheck(boolean checksumCheck) {
+        comparisonParam.setChecksumCheck(checksumCheck);
+    }
+
+    public boolean isDataCheck() {
+        return comparisonParam.isDataCheck();
+    }
+
+    public void setDataCheck(boolean dataCheck) {
+        comparisonParam.setDataCheck(dataCheck);
+    }
+
+    public ComparisionParams getComparisonParam() {
+        return comparisonParam;
     }
 }
