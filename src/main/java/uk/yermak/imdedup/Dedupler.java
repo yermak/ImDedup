@@ -148,7 +148,7 @@ public class Dedupler implements Runnable {
     private boolean compareFileEntries(FileEntry source, FileEntry target) {
         try {
             return comparator.compare(source, target);
-//            return new BasicImageComparator().compare(source, target);
+//            return new FileAttributesImageComparator().compare(source, target);
         } catch (IOException e) {
             e.printStackTrace();
             return false;

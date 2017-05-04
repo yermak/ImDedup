@@ -16,6 +16,6 @@ public class ComparatorFactory {
         if (params.isChecksumCheck()) {
             return new AndImageComparator(new ChecksumImageComparator(), new DataImageComparator());
         }
-        return new BasicImageComparator();
+        return new FileAttributesImageComparator();
     }
 }

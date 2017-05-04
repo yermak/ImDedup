@@ -80,9 +80,9 @@
                     <properties>
                       <model>
                         <item value="Do nothing"/>
-                        <item value="Delete"/>
                         <item value="Copy"/>
                         <item value="Move"/>
+                        <item value="Delete"/>
                       </model>
                     </properties>
                   </component>
@@ -99,7 +99,12 @@
                       <grid row="3" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <model/>
+                      <model>
+                        <item value="Do nothing"/>
+                        <item value="Copy"/>
+                        <item value="Move"/>
+                        <item value="Delete"/>
+                      </model>
                     </properties>
                   </component>
                   <component id="6de33" class="javax.swing.JLabel">
@@ -194,7 +199,14 @@
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <model>
+                        <item value="Do nothing"/>
+                        <item value="Copy"/>
+                        <item value="Move"/>
+                        <item value="Delete"/>
+                      </model>
+                    </properties>
                   </component>
                   <component id="b4b7d" class="javax.swing.JLabel">
                     <constraints>
@@ -216,7 +228,14 @@
                     <constraints>
                       <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <model>
+                        <item value="Do nothing"/>
+                        <item value="Copy"/>
+                        <item value="Move"/>
+                        <item value="Delete"/>
+                      </model>
+                    </properties>
                   </component>
                   <vspacer id="fcfd4">
                     <constraints>
