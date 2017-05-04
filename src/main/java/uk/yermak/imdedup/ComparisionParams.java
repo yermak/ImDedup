@@ -6,7 +6,6 @@ package uk.yermak.imdedup;
 public class ComparisionParams {
 
     private boolean smartCheck;
-    private boolean basicCheck;
     private boolean checksumCheck;
     private boolean dataCheck;
 
@@ -16,14 +15,6 @@ public class ComparisionParams {
 
     public void setSmartCheck(boolean smartCheck) {
         this.smartCheck = smartCheck;
-    }
-
-    public boolean isBasicCheck() {
-        return basicCheck;
-    }
-
-    public void setBasicCheck(boolean basicCheck) {
-        this.basicCheck = basicCheck;
     }
 
     public boolean isChecksumCheck() {

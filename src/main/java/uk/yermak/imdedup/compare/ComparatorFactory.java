@@ -7,8 +7,11 @@ import uk.yermak.imdedup.ComparisionParams;
  */
 public class ComparatorFactory {
     public static ImageComparator comparator(ComparisionParams params) {
+        if (params.isSmartCheck()) {
+            throw new UnsupportedOperationException("Smart comparision is not yet implemented");
+        }
         if (params.isDataCheck()) {
-            return new AndImageComparator(new ChecksumImageComparator(), new DataImageComparator());
+            return new DataImageComparator();
         }
         if (params.isChecksumCheck()) {
             return new AndImageComparator(new ChecksumImageComparator(), new DataImageComparator());

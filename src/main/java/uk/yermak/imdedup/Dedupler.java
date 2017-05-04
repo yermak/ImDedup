@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -24,6 +25,7 @@ public class Dedupler implements Runnable {
     private ImageComparator comparator;
     private DedupConfiguration[] configurations;
     private LinkedList<FileEntry> targets = new LinkedList<>();
+    private ArrayList<FileEntry> duplicates = new ArrayList<>();
 
 
     public Dedupler(DedupObserver observer, ImageComparator comparator, DedupConfiguration... configurations) {
@@ -48,6 +50,7 @@ public class Dedupler implements Runnable {
                 if (duplicate != null) {
                     i++;
                     j++;
+                    duplicates.add(duplicate);
                     //might be needed if can not remove by iterator. e.g from another thread.
                     //targets.remove(duplicate);
 

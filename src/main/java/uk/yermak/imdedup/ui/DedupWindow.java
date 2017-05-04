@@ -34,6 +34,14 @@ public class DedupWindow {
     private JCheckBox sumCheck;
     private JCheckBox fileCheck;
     private JCheckBox imageCheck;
+    private JComboBox duplicateActionCombo1;
+    private JComboBox duplicateActionCombo2;
+    private JComboBox uniqueActionCombo1;
+    private JComboBox uniqueActionCombo2;
+    private JButton duplicateActionBrowse1;
+    private JButton uniqueActionBrowse1;
+    private JButton duplicateActionBrowse2;
+    private JButton uniqueActionBrowse2;
     private DedupObserver observer;
 
 

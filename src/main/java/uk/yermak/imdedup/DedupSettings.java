@@ -88,14 +88,6 @@ public class DedupSettings {
         comparisonParam.setSmartCheck(smartCheck);
     }
 
-    public boolean isBasicCheck() {
-        return comparisonParam.isBasicCheck();
-    }
-
-    public void setBasicCheck(boolean basicCheck) {
-        comparisonParam.setBasicCheck(basicCheck);
-    }
-
     public boolean isChecksumCheck() {
         return comparisonParam.isChecksumCheck();
     }
