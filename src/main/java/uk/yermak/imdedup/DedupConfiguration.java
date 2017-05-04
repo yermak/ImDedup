@@ -6,6 +6,12 @@ package uk.yermak.imdedup;
 public class DedupConfiguration {
     private String location;
     private boolean subfolders;
+    private String duplicatesLocation;
+    private String uniquesLocation;
+    enum ActionStrategy {NONE, COPY, MOVE, DELETE};
+    private ActionStrategy duplicatesAction = ActionStrategy.NONE;
+    private ActionStrategy uniquesAction = ActionStrategy.NONE;
+
 
     public DedupConfiguration(String location) {
 
@@ -30,5 +36,37 @@ public class DedupConfiguration {
 
     public void setSubfolders(boolean subfolders) {
         this.subfolders = subfolders;
+    }
+
+    public String getDuplicatesLocation() {
+        return duplicatesLocation;
+    }
+
+    public void setDuplicatesLocation(String duplicatesLocation) {
+        this.duplicatesLocation = duplicatesLocation;
+    }
+
+    public String getUniquesLocation() {
+        return uniquesLocation;
+    }
+
+    public void setUniquesLocation(String uniquesLocation) {
+        this.uniquesLocation = uniquesLocation;
+    }
+
+    public ActionStrategy getDuplicatesAction() {
+        return duplicatesAction;
+    }
+
+    public void setDuplicatesAction(ActionStrategy duplicatesAction) {
+        this.duplicatesAction = duplicatesAction;
+    }
+
+    public ActionStrategy getUniquesAction() {
+        return uniquesAction;
+    }
+
+    public void setUniquesAction(ActionStrategy uniquesAction) {
+        this.uniquesAction = uniquesAction;
     }
 }
