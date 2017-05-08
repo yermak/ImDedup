@@ -107,4 +107,68 @@ public class DedupSettings {
     public ComparisionParams getComparisonParam() {
         return comparisonParam;
     }
+
+    public String getDuplicatesLocation1() {
+        return configuration1.getDuplicatesLocation();
+    }
+
+    public void setDuplicatesLocation1(String duplicatesLocation) {
+        configuration1.setDuplicatesLocation(duplicatesLocation);
+    }
+
+    public String getUniquesLocation1() {
+        return configuration1.getUniquesLocation();
+    }
+
+    public void setUniquesLocation1(String uniquesLocation) {
+        configuration1.setUniquesLocation(uniquesLocation);
+    }
+
+    public DedupConfiguration.ActionStrategy getDuplicatesAction1() {
+        return configuration1.getDuplicatesAction();
+    }
+
+    public void setDuplicatesAction1(DedupConfiguration.ActionStrategy duplicatesAction) {
+        configuration1.setDuplicatesAction(duplicatesAction);
+    }
+
+    public DedupConfiguration.ActionStrategy getUniquesAction1() {
+        return configuration1.getUniquesAction();
+    }
+
+    public void setUniquesAction1(DedupConfiguration.ActionStrategy uniquesAction) {
+        configuration1.setUniquesAction(uniquesAction);
+    }
+
+    public String getDuplicatesLocation2() {
+        return configuration2.getDuplicatesLocation();
+    }
+
+    public void setDuplicatesLocation2(String duplicatesLocation) {
+        configuration2.setDuplicatesLocation(duplicatesLocation);
+    }
+
+    public String getUniquesLocation2() {
+        return configuration2.getUniquesLocation();
+    }
+
+    public void setUniquesLocation2(String uniquesLocation) {
+        configuration2.setUniquesLocation(uniquesLocation);
+    }
+
+    public DedupConfiguration.ActionStrategy getDuplicatesAction2() {
+        return configuration2.getDuplicatesAction();
+    }
+
+    public void setDuplicatesAction2(DedupConfiguration.ActionStrategy duplicatesAction) {
+        configuration2.setDuplicatesAction(duplicatesAction);
+    }
+
+    public DedupConfiguration.ActionStrategy getUniquesAction2() {
+        return configuration2.getUniquesAction();
+    }
+
+    public void setUniquesAction2(DedupConfiguration.ActionStrategy uniquesAction) {
+        configuration2.setUniquesAction(uniquesAction);
+    }
 }
