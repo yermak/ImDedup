@@ -8,15 +8,10 @@ public class DedupConfiguration {
     private boolean subfolders;
     private String duplicatesLocation;
     private String uniquesLocation;
-    enum ActionStrategy {NONE, COPY, MOVE, DELETE};
-    private ActionStrategy duplicatesAction = ActionStrategy.NONE;
-    private ActionStrategy uniquesAction = ActionStrategy.NONE;
 
-
-    public DedupConfiguration(String location) {
-
-        this.location = location;
-    }
+    ;
+    private ActionStrategy duplicatesAction;
+    private ActionStrategy uniquesAction;
 
     public DedupConfiguration() {
 

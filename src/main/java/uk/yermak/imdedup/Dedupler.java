@@ -29,6 +29,7 @@ public class Dedupler implements Runnable {
 
 
     public Dedupler(DedupObserver observer, ImageComparator comparator, DedupConfiguration... configurations) {
+        super();
         this.observer = observer;
         this.comparator = comparator;
         this.configurations = configurations;
