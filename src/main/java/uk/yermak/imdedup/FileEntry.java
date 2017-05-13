@@ -22,17 +22,20 @@ import java.util.zip.Checksum;
 public class FileEntry {
     private File file;
     private String location;
+    private DedupConfiguration configuration;
     private long crc32 = 0;
     private LinkedHashSet<FileEntry> duplicates = new LinkedHashSet<>();
     //    private static ExecutorService pool = Executors.newFixedThreadPool(1);
 //    private CountDownLatch latch;
 
-    public FileEntry(File file, String location) {
+    public FileEntry(File file, String location, DedupConfiguration configuration) {
         this.file = file;
         this.location = location;
 //        latch = new CountDownLatch(1);
 //        pool.submit(this);
+        this.configuration = configuration;
     }
+
 
     public void addDuplicate(FileEntry entry) {
         if (this == entry || duplicates.contains(entry)) return;
@@ -111,7 +114,7 @@ public class FileEntry {
                 String[] names = metadata.getMetadataFormatNames();
                 int length = names.length;
                 for (int i = 0; i < length; i++) {
-                    System.out.println( "Format name: " + names[ i ] );
+                    System.out.println("Format name: " + names[i]);
                     displayMetadata(metadata.getAsTree(names[i]));
                 }
             }
@@ -176,5 +179,15 @@ public class FileEntry {
         // print close tag of element
         indent(level);
         System.out.println("</" + node.getNodeName() + ">");
+    }
+
+    public void performAction(boolean duplicate) {
+        if (duplicate) {
+            System.out.println("Duplicate file = " + file + " was " + configuration.getDuplicatesAction() + " to  " + configuration.getDuplicatesLocation());
+            configuration.getDuplicatesAction().perform(file, configuration.getDuplicatesLocation());
+        } else {
+            System.out.println("Unique file = " + file + " was " + configuration.getUniquesAction() + " to  " + configuration.getUniquesLocation());
+            configuration.getUniquesAction().perform(file, configuration.getUniquesLocation());
+        }
     }
 }

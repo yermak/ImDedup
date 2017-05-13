@@ -51,10 +51,10 @@ public class DedupWindow {
 
     public DedupWindow() {
 
-        buildLocationCombo(duplicatesActionCombo1, duplicatesActionBrowse1, duplicatesActionLocation1Field);
-        buildLocationCombo(duplicatesActionCombo2, duplicatesActionBrowse2, duplicatesActionLocation2Field);
-        buildLocationCombo(uniquesActionCombo1, uniquesActionBrowse1, uniquesActionLocation1Field);
-        buildLocationCombo(uniquesActionCombo2, uniquesActionBrowse2, uniquesActionLocation2Field);
+        buildActionCombo(duplicatesActionCombo1, duplicatesActionBrowse1, duplicatesActionLocation1Field);
+        buildActionCombo(duplicatesActionCombo2, duplicatesActionBrowse2, duplicatesActionLocation2Field);
+        buildActionCombo(uniquesActionCombo1, uniquesActionBrowse1, uniquesActionLocation1Field);
+        buildActionCombo(uniquesActionCombo2, uniquesActionBrowse2, uniquesActionLocation2Field);
 
         DedupSettings data = new DedupSettings();
         setData(data);
@@ -80,7 +80,7 @@ public class DedupWindow {
         browseButton2.addActionListener(e -> selectFolder(browseButton2, location2Field));
     }
 
-    private void buildLocationCombo(JComboBox actionCombo, JButton actionBrowse, JTextField actionLocation) {
+    private void buildActionCombo(JComboBox actionCombo, JButton actionBrowse, JTextField actionLocation) {
         actionCombo.setModel(new ActionComboModel());
         actionCombo.addActionListener(e -> {
             toggleLocationInputs(actionCombo, actionBrowse, actionLocation);

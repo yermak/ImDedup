@@ -26,6 +26,7 @@ public class Dedupler implements Runnable {
     private DedupConfiguration[] configurations;
     private LinkedList<FileEntry> targets = new LinkedList<>();
     private ArrayList<FileEntry> duplicates = new ArrayList<>();
+    private ArrayList<FileEntry> uniques = new ArrayList<>();
 
 
     public Dedupler(DedupObserver observer, ImageComparator comparator, DedupConfiguration... configurations) {
@@ -57,6 +58,8 @@ public class Dedupler implements Runnable {
 
                     //TODO: move text to observer
                     observer.setStatus("Found duplicates: " + i);
+                } else {
+                    uniques.add(entry);
                 }
                 observer.setProgress(j);
             }
@@ -65,18 +68,31 @@ public class Dedupler implements Runnable {
 
             //TODO: move text to observer
             observer.setStatus("Found duplicates: " + i + " out of " + j + " files in " + observer.getTime() + " sec");
+
+            processFiles();
+
         } catch (StopException se) {
             observer.stopped();
         }
 
     }
 
+    private void processFiles() {
+        for (int i = 0; i < duplicates.size(); i++) {
+            FileEntry fileEntry = duplicates.get(i);
+            fileEntry.performAction(true);
+        }
+        for (int i = 0; i < uniques.size(); i++) {
+            FileEntry fileEntry = uniques.get(i);
+            fileEntry.performAction(false);
+        }
+    }
+
     private void loadScope() throws StopException {
         for (DedupConfiguration configuration : configurations) {
             observer.checkStopped();
-            String location = configuration.getLocation();
-            File targetDirectory = new File(location);
-            loadFilesFromDirectory(targetDirectory);
+            File targetDirectory = new File(configuration.getLocation());
+            loadFilesFromDirectory(targetDirectory, configuration);
         }
         observer.setStatus("Loaded: " + targets.size() + " files");
     }
@@ -106,12 +122,13 @@ public class Dedupler implements Runnable {
         return i;
     }
 
-    private void loadFilesFromDirectory(File targetDirectory) throws StopException {
+    private void loadFilesFromDirectory(File targetDirectory, DedupConfiguration configuration) throws StopException {
+
         File[] files = targetDirectory.listFiles(IMAGE_FILE_FILTER);
 
         for (File file : files) {
             observer.checkStopped();
-            FileEntry fileEntry = new FileEntry(file, targetDirectory.getPath());
+            FileEntry fileEntry = new FileEntry(file, targetDirectory.getPath(), configuration);
             fileEntry.load();
             targets.add(fileEntry);
             //todo move to observer, keep number only
@@ -121,7 +138,7 @@ public class Dedupler implements Runnable {
 
         File[] dirs = targetDirectory.listFiles((FileFilter) DirectoryFileFilter.DIRECTORY);
         for (File dir : dirs) {
-            loadFilesFromDirectory(dir);
+            loadFilesFromDirectory(dir, configuration);
         }
         observer.setStatus("Loaded: " + targets.size() + " files");
     }
@@ -149,7 +166,6 @@ public class Dedupler implements Runnable {
     private boolean compareFileEntries(FileEntry source, FileEntry target) {
         try {
             return comparator.compare(source, target);
-//            return new FileAttributesImageComparator().compare(source, target);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
