@@ -5,7 +5,7 @@ import uk.yermak.imdedup.FileEntry;
 import java.io.IOException;
 
 /**
- * Created by Yermak on 20-Oct-16.
+ * Created by yermak on 20-Oct-16.
  */
 public class AndImageComparator implements ImageComparator {
 

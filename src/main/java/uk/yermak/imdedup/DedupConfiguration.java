@@ -9,7 +9,6 @@ public class DedupConfiguration {
     private String duplicatesLocation;
     private String uniquesLocation;
 
-    ;
     private ActionStrategy duplicatesAction;
     private ActionStrategy uniquesAction;
 

@@ -82,9 +82,7 @@ public class DedupWindow {
 
     private void buildActionCombo(JComboBox actionCombo, JButton actionBrowse, JTextField actionLocation) {
         actionCombo.setModel(new ActionComboModel());
-        actionCombo.addActionListener(e -> {
-            toggleLocationInputs(actionCombo, actionBrowse, actionLocation);
-        });
+        actionCombo.addActionListener(e -> toggleLocationInputs(actionCombo, actionBrowse, actionLocation));
         actionBrowse.addActionListener(e -> selectFolder(actionBrowse, actionLocation));
     }
 
@@ -112,6 +110,7 @@ public class DedupWindow {
     public static void main(String[] args) {
         JFrame frame = new JFrame("ImDedup");
         frame.setContentPane(new DedupWindow().contentPane);
+        //noinspection MagicConstant
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
@@ -162,6 +161,7 @@ public class DedupWindow {
         if (location2Subfolders.isSelected() != data.isSubfolders2()) return true;
         if (imageCheck.isSelected() != data.isSmartCheck()) return true;
         if (sumCheck.isSelected() != data.isChecksumCheck()) return true;
+        //noinspection RedundantIfStatement
         if (fileCheck.isSelected() != data.isDataCheck()) return true;
         return false;
     }

@@ -11,7 +11,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * Created by yermak on 12-Oct-16.
@@ -125,7 +128,7 @@ public class Dedupler implements Runnable {
 
         for (File file : files) {
             observer.checkStopped();
-            FileEntry fileEntry = new FileEntry(file, targetDirectory.getPath(), configuration);
+            FileEntry fileEntry = new FileEntry(file, configuration);
             fileEntry.load();
             targets.add(fileEntry);
             //todo move to observer, keep number only
@@ -142,8 +145,7 @@ public class Dedupler implements Runnable {
 
     private Set<FileEntry> checkDuplicates(LinkedList<FileEntry> fileEntries, FileEntry fileEntry) {
         Set<FileEntry> foundDuplicates = null;
-        for (Iterator<FileEntry> iterator = fileEntries.iterator(); iterator.hasNext(); ) {
-            FileEntry entry = iterator.next();
+        for (FileEntry entry : fileEntries) {
             if (fileEntry == entry) {
                 continue;
             }

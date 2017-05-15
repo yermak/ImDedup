@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * Created by Yermak on 20-Oct-16.
+ * Created by yermak on 20-Oct-16.
  */
 public class DataImageComparator implements ImageComparator {
     @Override

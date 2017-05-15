@@ -28,11 +28,8 @@ public class FileEntry {
     //    private static ExecutorService pool = Executors.newFixedThreadPool(1);
 //    private CountDownLatch latch;
 
-    public FileEntry(File file, String location, DedupConfiguration configuration) {
+    public FileEntry(File file, DedupConfiguration configuration) {
         this.file = file;
-        String location1 = location;
-//        latch = new CountDownLatch(1);
-//        pool.submit(this);
         this.configuration = configuration;
     }
 
@@ -117,9 +114,9 @@ public class FileEntry {
 
                 String[] names = metadata.getMetadataFormatNames();
                 int length = names.length;
-                for (int i = 0; i < length; i++) {
-                    System.out.println("Format name: " + names[i]);
-                    displayMetadata(metadata.getAsTree(names[i]));
+                for (String name : names) {
+                    System.out.println("Format name: " + name);
+                    displayMetadata(metadata.getAsTree(name));
                 }
             }
         } catch (IOException e) {

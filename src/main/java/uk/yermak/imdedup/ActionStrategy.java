@@ -1,8 +1,5 @@
 package uk.yermak.imdedup;
 
-/**
- * Created by yermak on 08-May-17.
- */
 public enum ActionStrategy {
     None {
         @Override
@@ -34,11 +31,14 @@ public enum ActionStrategy {
         }
     };
 
+    /**
+     * Created by yermak on 08-May-17.
+     */
     public boolean needsInput() {
         return false;
     }
 
     public abstract void perform(FileEntry fileEntry, boolean duplicate);
-};
+}
 
 
