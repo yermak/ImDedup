@@ -16,7 +16,8 @@ configurations {
 
 dependencies {
     compile 'commons-io:commons-io:2.5'
-    testCompile 'org.testng:testng:6.9.13.8'
+    testCompile 'org.testng:testng:6.9.13'
+
     antTask name: 'javac2', version: 'IC-2017.1.2'
     compile name: 'forms_rt', version:'IC-2017.1.2'
     antTask name: 'asm-all', version: 'IC-2017.1.2'

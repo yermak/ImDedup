@@ -11,17 +11,17 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.ImageInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
 
 /**
  * Created by yermak on 18-Oct-16.
  */
 public class FileEntry {
     private File file;
-    private String location;
     private DedupConfiguration configuration;
     private long crc32 = 0;
     private LinkedHashSet<FileEntry> duplicates = new LinkedHashSet<>();
@@ -30,7 +30,7 @@ public class FileEntry {
 
     public FileEntry(File file, String location, DedupConfiguration configuration) {
         this.file = file;
-        this.location = location;
+        String location1 = location;
 //        latch = new CountDownLatch(1);
 //        pool.submit(this);
         this.configuration = configuration;
@@ -75,7 +75,7 @@ public class FileEntry {
         return duplicates.contains(entry);
     }
 
-    public long getCrc32() throws IOException {
+    public long getCrc32()  {
 //        try {
 //            latch.await();
         return crc32;
@@ -90,10 +90,7 @@ public class FileEntry {
 
         if (crc32 == 0) {
             try {
-                Checksum checksum = new CRC32();
-                byte[] ownBytes = FileUtils.readFileToByteArray(file);
-                checksum.update(ownBytes, 0, ownBytes.length);
-                crc32 = checksum.getValue();
+                crc32 = FileUtils.checksumCRC32(file);
                 System.out.println("Checksum calculated for = " + file.getPath() + " :" + crc32);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -191,10 +188,10 @@ public class FileEntry {
     public void performAction(boolean duplicate) {
         if (duplicate) {
             System.out.println("Duplicate file = " + file + " was " + configuration.getDuplicatesAction() + " to  " + configuration.getDuplicatesLocation());
-            configuration.getDuplicatesAction().perform(file, configuration.getDuplicatesLocation());
+            configuration.getDuplicatesAction().perform(this, duplicate);
         } else {
             System.out.println("Unique file = " + file + " was " + configuration.getUniquesAction() + " to  " + configuration.getUniquesLocation());
-            configuration.getUniquesAction().perform(file, configuration.getUniquesLocation());
+            configuration.getUniquesAction().perform(this, duplicate);
         }
     }
 
@@ -202,4 +199,38 @@ public class FileEntry {
         return duplicates;
     }
 
+    void performCopy(boolean duplicate) {
+        try {
+            Path resolved = getResolvedPath(duplicate);
+            Files.copy(file.toPath(), resolved, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Path getResolvedPath(boolean duplicate) throws IOException {
+        String dist = duplicate ? configuration.getDuplicatesLocation() : configuration.getUniquesLocation();
+        Path source = new File(configuration.getLocation()).toPath();
+        Path relativize = source.relativize(file.toPath());
+        Path resolve = new File(dist).toPath().resolve(relativize);
+        Files.createDirectories(resolve.getParent());
+        return resolve;
+    }
+
+    void performMove(boolean duplicate) {
+        try {
+            Path resolved = getResolvedPath(duplicate);
+            Files.move(file.toPath(), resolved, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void performDelete() {
+        try {
+            Files.delete(file.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
