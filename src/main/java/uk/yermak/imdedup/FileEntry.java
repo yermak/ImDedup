@@ -39,8 +39,15 @@ public class FileEntry {
 
     public void addDuplicate(FileEntry entry) {
         if (this == entry || duplicates.contains(entry)) return;
-        entry.duplicates.addAll(duplicates);
-        duplicates = entry.duplicates;
+        LinkedHashSet<FileEntry> tmp = new LinkedHashSet<>();
+        tmp.addAll(duplicates);
+        tmp.addAll(entry.duplicates);
+        tmp.add(this);
+        tmp.add(entry);
+
+        duplicates = tmp;
+        entry.duplicates = tmp;
+
     }
 
     @Override
@@ -64,7 +71,7 @@ public class FileEntry {
         return file.getPath();
     }
 
-    public boolean isDuplicate(FileEntry entry) {
+    public boolean isDuplicated(FileEntry entry) {
         return duplicates.contains(entry);
     }
 
@@ -190,4 +197,9 @@ public class FileEntry {
             configuration.getUniquesAction().perform(file, configuration.getUniquesLocation());
         }
     }
+
+    public LinkedHashSet<FileEntry> getDuplicates() {
+        return duplicates;
+    }
+
 }

@@ -11,9 +11,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Created by yermak on 12-Oct-16.
@@ -25,7 +23,7 @@ public class Dedupler implements Runnable {
     private ImageComparator comparator;
     private DedupConfiguration[] configurations;
     private LinkedList<FileEntry> targets = new LinkedList<>();
-    private ArrayList<FileEntry> duplicates = new ArrayList<>();
+    private LinkedHashSet<FileEntry> duplicates = new LinkedHashSet<>();
     private ArrayList<FileEntry> uniques = new ArrayList<>();
 
 
@@ -48,11 +46,12 @@ public class Dedupler implements Runnable {
             for (FileEntry entry = targets.pollFirst(); entry != null; entry = targets.pollFirst()) {
                 observer.checkStopped();
                 j++;
-                FileEntry duplicate = checkDuplicates(targets, entry);
-                if (duplicate != null) {
-                    i++;
-                    j++;
-                    duplicates.add(duplicate);
+                Set<FileEntry> foundDuplicates = checkDuplicates(targets, entry);
+                if (foundDuplicates != null) {
+                    i += foundDuplicates.size();
+                    j += foundDuplicates.size() - 1;
+                    duplicates.addAll(foundDuplicates);
+                    targets.removeAll(duplicates);
                     //might be needed if can not remove by iterator. e.g from another thread.
                     //targets.remove(duplicate);
 
@@ -78,13 +77,11 @@ public class Dedupler implements Runnable {
     }
 
     private void processFiles() {
-        for (int i = 0; i < duplicates.size(); i++) {
-            FileEntry fileEntry = duplicates.get(i);
-            fileEntry.performAction(true);
+        for (FileEntry duplicate : duplicates) {
+            duplicate.performAction(true);
         }
-        for (int i = 0; i < uniques.size(); i++) {
-            FileEntry fileEntry = uniques.get(i);
-            fileEntry.performAction(false);
+        for (FileEntry unique : uniques) {
+            unique.performAction(false);
         }
     }
 
@@ -143,24 +140,24 @@ public class Dedupler implements Runnable {
         observer.setStatus("Loaded: " + targets.size() + " files");
     }
 
-    private FileEntry checkDuplicates(LinkedList<FileEntry> fileEntries, FileEntry fileEntry) {
+    private Set<FileEntry> checkDuplicates(LinkedList<FileEntry> fileEntries, FileEntry fileEntry) {
+        Set<FileEntry> foundDuplicates = null;
         for (Iterator<FileEntry> iterator = fileEntries.iterator(); iterator.hasNext(); ) {
             FileEntry entry = iterator.next();
             if (fileEntry == entry) {
                 continue;
             }
-            if (fileEntry.isDuplicate(entry)) {
-                return fileEntry;
+            if (fileEntry.isDuplicated(entry)) {
+                return fileEntry.getDuplicates();
             }
 
             if (compareFileEntries(fileEntry, entry)) {
                 System.out.println("File 1:" + fileEntry.toString() + " File 2: " + entry.toString());
                 fileEntry.addDuplicate(entry);
-                iterator.remove();
-                return fileEntry;
+                foundDuplicates = fileEntry.getDuplicates();
             }
         }
-        return null;
+        return foundDuplicates;
     }
 
     private boolean compareFileEntries(FileEntry source, FileEntry target) {
