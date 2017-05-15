@@ -1,0 +1,52 @@
+group 'uk.yermak'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    flatDir dirs: "${rootDir}/lib"
+    mavenCentral()
+}
+
+configurations {
+    antTask
+}
+
+dependencies {
+    compile 'commons-io:commons-io:2.5'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'org.testng:testng:6.9.13'
+    antTask name: 'javac2', version: 'IC-2017.1.2'
+    antTask name: 'forms_rt', version: 'IC-2017.1.2'
+    antTask name: 'asm-all', version: 'IC-2017.1.2'
+    antTask name: 'jgoodies-forms', version: 'IC-2017.1.2'
+    antTask group: 'org.jdom', name: 'jdom', version: '1.1'
+}
+
+
+task compileJava(overwrite: true, dependsOn: configurations.compile.getTaskDependencyFromProjectDependency(true, 'jar')) {
+    doLast {
+        project.sourceSets.main.output.classesDir.mkdirs()
+        ant.taskdef name: 'javac2', classname: 'com.intellij.ant.Javac2', classpath: configurations.antTask.asPath
+        ant.javac2 srcdir: project.sourceSets.main.java.srcDirs.join(':'),
+                classpath: project.sourceSets.main.compileClasspath.asPath,
+                destdir: project.sourceSets.main.output.classesDir,
+                source: sourceCompatibility,
+                target: targetCompatibility,
+                failOnError: true,
+                includeAntRuntime: false
+    }
+}
+
+task singleJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'I am Dedup',
+                'Implementation-Version': version,
+                'Main-Class': 'uk.yermak.imdedup.ui.DedupWindow'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

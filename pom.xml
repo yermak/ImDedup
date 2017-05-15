@@ -8,31 +8,11 @@
     <artifactId>im.dedup</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-
-    <repositories>
-        <repository>
-            <id>jcenter</id>
-            <name>bintray</name>
-            <url>http://jcenter.bintray.com</url>
-        </repository>
-    </repositories>
-
-
     <dependencies>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.intellij</groupId>
-            <artifactId>forms_rt</artifactId>
-            <version>7.0.3</version>
         </dependency>
 
         <dependency>
@@ -43,19 +23,84 @@
         </dependency>
     </dependencies>
 
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <compiler.generate.no.warnings>off</compiler.generate.no.warnings>
+        <compiler.max.memory>700m</compiler.max.memory>
+        <compiler.debug>on</compiler.debug>
+        <compiler.args.main></compiler.args.main>
+    </properties>
+
     <build>
         <plugins>
 
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
+            </plugin>-->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target>
+
+                                <path id="javac2.classpath">
+                                    <pathelement location="${project.basedir}/lib/javac2.jar"/>
+                                    <pathelement location="${project.basedir}/lib/jdom.jar"/>
+                                    <pathelement location="${project.basedir}/lib/asm-all.jar"/>
+                                    <pathelement location="${project.basedir}/lib/jgoodies-forms.jar"/>
+                                </path>
+
+                                <taskdef name="javac2" classname="com.intellij.ant.Javac2"
+                                         classpathref="javac2.classpath"/>
+
+                                <path id="main.module.sourcepath">
+                                    <dirset dir="${project.build.sourceDirectory}">
+                                        <include name="src/main/java"/>
+                                        <include name="src/main/resources"/>
+                                    </dirset>
+                                </path>
+
+
+                                <javac2 destdir="${project.basedir}/target" debug="${compiler.debug}"
+                                        nowarn="${compiler.generate.no.warnings}"
+                                        memorymaximumsize="${compiler.max.memory}" fork="true">
+                                    <compilerarg line="${compiler.args.main}"/>
+                                    <bootclasspath refid="main.module.bootclasspath"/>
+                                    <classpath refid="main.module.production.classpath"/>
+                                    <src refid="main.module.sourcepath"/>
+                                    <patternset refid="excluded.from.compilation.main"/>
+                                </javac2>
+
+
+                                <property name="compile_classpath" refid="maven.compile.classpath"/>
+                                <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                                <property name="test_classpath" refid="maven.test.classpath"/>
+                                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
+           <!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>ideauidesigner-maven-plugin</artifactId>
@@ -67,14 +112,13 @@
                         </goals>
                     </execution>
                 </executions>
-
                 <configuration>
                     <fork>true</fork>
                     <debug>true</debug>
                     <failOnError>true</failOnError>
                 </configuration>
             </plugin>
-
+-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
