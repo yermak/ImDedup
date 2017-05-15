@@ -16,15 +16,13 @@ configurations {
 
 dependencies {
     compile 'commons-io:commons-io:2.5'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile 'org.testng:testng:6.9.13'
+    testCompile 'org.testng:testng:6.9.13.8'
     antTask name: 'javac2', version: 'IC-2017.1.2'
-    antTask name: 'forms_rt', version: 'IC-2017.1.2'
+    compile name: 'forms_rt', version:'IC-2017.1.2'
     antTask name: 'asm-all', version: 'IC-2017.1.2'
     antTask name: 'jgoodies-forms', version: 'IC-2017.1.2'
-    antTask group: 'org.jdom', name: 'jdom', version: '1.1'
+    antTask group: 'org.jdom', name: 'jdom', version: '1.1.3'
 }
-
 
 task compileJava(overwrite: true, dependsOn: configurations.compile.getTaskDependencyFromProjectDependency(true, 'jar')) {
     doLast {
@@ -35,12 +33,11 @@ task compileJava(overwrite: true, dependsOn: configurations.compile.getTaskDepen
                 destdir: project.sourceSets.main.output.classesDir,
                 source: sourceCompatibility,
                 target: targetCompatibility,
-                failOnError: true,
                 includeAntRuntime: false
     }
 }
 
-task singleJar(type: Jar) {
+task singleJar(overwrite: true, type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'I am Dedup',
                 'Implementation-Version': version,
